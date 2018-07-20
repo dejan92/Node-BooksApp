@@ -1,0 +1,25 @@
+[{
+    "title": "First Book",
+    "author": "John",
+    "price": 30,
+    "available": true,
+    "thumb": "img/book1.png"
+}, {
+    "title": "Second Book",
+    "author": "Jimmy",
+    "price": 40,
+    "available": true,
+    "thumb": "img/book2.png"
+}, {
+    "title": "Third Book",
+    "author": "Jack",
+    "price": 20,
+    "available": true,
+    "thumb": "img/book1.png"
+}, {
+    "title": "Fourth Book",
+    "author": "Brad",
+    "price": 120,
+    "available": true,
+    "thumb": "img/book1.png"
+}]
