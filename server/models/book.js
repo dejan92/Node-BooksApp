@@ -2,6 +2,11 @@ let mongoose = require('mongoose');
 
 //Book Schema
 let bookSchema = mongoose.Schema({
+    isbn: {
+        type: Number,
+        required: true,
+        unique: true
+    },
     title: {
         type: String,
         required: true
@@ -10,12 +15,13 @@ let bookSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    price: {
+    pages: {
         type: Number,
         required: true
     },
-    available: {
-        type: Boolean
+    description: {
+        type: String,
+        required: true
     },
     thumb: {
         type: String

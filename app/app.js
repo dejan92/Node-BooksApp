@@ -1,5 +1,4 @@
 
-
 var bookApp = angular.module('bookApp', ['ngRoute']);
 
 bookApp.config(['$routeProvider', function ($routeProvider) {
@@ -21,6 +20,14 @@ bookApp.config(['$routeProvider', function ($routeProvider) {
         })
         .when('/directory', {
             templateUrl: 'views/directory.html',
+            controller: 'BookController'
+        })
+        .when('/login', {
+            templateUrl: 'views/login.html',
+            controller: 'BookController'
+        })
+        .when('/register', {
+            templateUrl: 'views/register.html',
             controller: 'BookController'
         })
         .otherwise({
@@ -49,34 +56,37 @@ bookApp.directive('randomBook', [function () {
 
 bookApp.controller('BookController', ['$scope', '$http', function ($scope, $http) {
 
-    $scope.removeBook = function (book) {
-        let removedBook = $scope.books.indexOf(book);
+    
 
-        $scope.books.splice(removedBook, 1);
+    $scope.removeBook = function (book) {
+        //console.log($scope);
+       $http.delete('/books/' + $scope.books[0].author);
     };
+
+
 
     $scope.addBook = function () {
-        $scope.books.push({
-            title: $scope.newBook.title,
-            author: $scope.newBook.author,
-            price: parseInt($scope.newBook.price),
-            thumb: $scope.newBook.photo,
-            available: true
-        });
+        $http.post('/books/add', JSON.stringify($scope.newBook));
+        //console.log('New Book ' + $scope.newBook);
 
-        $scope.newBook.title = '',
-        $scope.newBook.author = '',
-        $scope.newBook.price = ''
-    };
+        $scope.newBook.isbn = '',
+            $scope.newBook.title = '',
+            $scope.newBook.author = '',
+            $scope.newBook.pages = '',
+            $scope.newBook.description = ''
+    }
 
-    $http.get('data/books.json').success(function (data) {
+    $http.get('/books/add').success(function (data) {
         $scope.books = data;
+        //console.log('Inside Book controller ' + data);
     });
 }]);
 
 bookApp.controller('HomeController', ['$scope', '$http', function ($scope, $http) {
-    $http.get('data/books.json').success(function (data) {
+    $http.get('/books/add').success(function (data) {
         $scope.books = data;
+        //console.log('Inside Home controller ' + data);
+
     });
 }]);
 
@@ -87,3 +97,18 @@ bookApp.controller('ContactController', ['$scope', '$location', function ($scope
     };
 
 }]);
+
+ //delete function
+ $('.delete-book').on('click', (e) => {
+    $target = $(e.target);
+    const id = $target.attr('data-id');
+    $.ajax({
+        type: 'DELETE',
+        url: '/books/' + id,
+        success: (response) => {
+            alert('Deleting Book');
+            window.location.href = '/';
+        },
+        error: (err) => console.log(err)
+    });
+});
