@@ -80,7 +80,7 @@ app.get('*', (req, res, next) => {
     next();
 });
 
-//Home Route
+//Home Route and serving the application
 app.get('/', (req, res) => {
     Book.find({}, (err, books) => {
         if (err) {
@@ -97,11 +97,6 @@ let books = require('./routes/books');
 let users = require('./routes/users');
 app.use('/books', books);
 app.use('/users', users);
-
-//serving the application
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../app/index.html'));
-})
 
 //setting port variable
 const port = process.env.port || 4000;

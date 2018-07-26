@@ -7,6 +7,14 @@ let Book = require('../models/book');
 // User Model
 let User = require('../models/user');
 
+//Get all Books
+router.get('/', (req, res) => {
+    Book.find((err, data) => {
+        if (err) console.log(err);
+        res.json(data);
+    })
+})
+
 //Add Route
 //ensureAuthenticated,
 router.get('/add', (req, res) => {
@@ -37,7 +45,7 @@ router.post('/add', (req, res) => {
         let book = new Book();
         book.isbn = req.body.isbn;
         book.title = req.body.title;
-        book.author = req.user._id;
+        book.author = req.body.author;
         book.pages = req.body.pages;
         book.description = req.body.description;
         book.thumb = req.body.thumb;
@@ -47,7 +55,10 @@ router.post('/add', (req, res) => {
             if (err) return console.log(err);
             else {
                 req.flash('success', 'Book Added');
-                res.redirect('/');
+                console.log('book added');
+                res.status(200).json({
+                    message: 'Book succefully added'
+                });
             }
         });
     }
@@ -58,7 +69,9 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
     Book.findById(req.params.id, (err, book) => {
         if (book.author != req.user._id) {
             req.flash('danger', 'Not Autorized');
-            res.redirect('/');
+            res.status(404).json({
+                message: 'User not found'
+            });
         }
         //LOAD Edit VIEW
         // res.render('edit_article', {
@@ -93,22 +106,25 @@ router.post('/edit/:id', (req, res) => {
 
 //Delete Book
 router.delete('/:id', (req, res) => {
-    console.log('Delete route: ' + req);
-    if (!req.user._id) {
-        res.status(500).send();
-    }
+    //console.log('Delete route: ' + req);
+
+    //proverka za ponataka dali e istiot avtor
+    // if (!req.user._id) {
+    //     res.status(500).send();
+    // }
 
     let query = {
         _id: req.params.id
     }
 
     Book.findById(req.params.id, (err, book) => {
-        if (book.author != req.user._id) {
+        if (book.author != req.body.author) {
             res.status(500).send();
         } else {
             Book.remove(query, (err) => {
                 if (err) return console.log(err);
                 res.send('Success');
+                console.log('book deleted');
             })
         }
     })

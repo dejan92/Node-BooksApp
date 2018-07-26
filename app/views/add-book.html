@@ -1,0 +1,9 @@
+<form ng-submit="addBook()">
+    <input type="text" class="form-control" placeholder="ISBN" ng-model="newBook.isbn">
+    <input type="text" class="form-control" placeholder="Title" ng-model="newBook.title">
+    <input type="text" class="form-control" placeholder="Author" ng-model="newBook.author">
+    <input type="text" class="form-control" placeholder="Pages" ng-model="newBook.pages">
+    <input type="text" class="form-control" placeholder="Description" ng-model="newBook.description">
+    <input type="file" name="photo" ng-model="newBook.photo">
+    <input type="submit" value="Add new Book">
+</form>

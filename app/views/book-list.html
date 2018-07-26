@@ -1,0 +1,25 @@
+<input type="text" ng-model="search" placeholder="search for a book">
+
+<table>
+    <tr>
+        <th>
+            <a href="" ng-click="sortField = 'title'; reverse = !reverse"> Book Title</a>
+        </th>
+        <th>
+            <a href="" ng-click="sortField = 'author'; reverse = !reverse"> Book Author</a>
+        </th>
+        <th>
+            <a href="" ng-click="sortField = 'pages'; reverse = !reverse"> Book Pages</a>
+        </th>
+    </tr>
+    <tr ng-repeat="book in books | filter:search | orderBy:sortField:reverse">
+        <td ng-show="{{book.thumb}}">
+            <img ng-src="{{book.thumb}}" width="100px">{{book.thumb}}
+        </td>
+        <td>
+            <a href="#/{{book.title | encodeURI}}"> {{book.title}}</a>
+        </td>
+        <td>{{book.author}}</td>
+        <td>{{book.pages | number}}</td>
+    </tr>
+</table>

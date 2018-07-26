@@ -1,4 +1,3 @@
-
 var bookApp = angular.module('bookApp', ['ngRoute']);
 
 bookApp.config(['$routeProvider', function ($routeProvider) {
@@ -10,6 +9,10 @@ bookApp.config(['$routeProvider', function ($routeProvider) {
             templateUrl: 'views/home.html',
             controller: 'HomeController'
         })
+        .when('/add', {
+            templateUrl: 'views/add-book.html',
+            controller: 'BookAddController'
+        })
         .when('/contact', {
             templateUrl: 'views/contact.html',
             controller: 'ContactController'
@@ -18,23 +21,54 @@ bookApp.config(['$routeProvider', function ($routeProvider) {
             templateUrl: 'views/contact-success.html',
             controller: 'ContactController'
         })
-        .when('/directory', {
-            templateUrl: 'views/directory.html',
-            controller: 'BookController'
+        .when('/book-list', {
+            templateUrl: 'views/book-list.html',
+            controller: 'BookListController'
         })
         .when('/login', {
             templateUrl: 'views/login.html',
-            controller: 'BookController'
+            // controller: 'LoginController'
         })
         .when('/register', {
             templateUrl: 'views/register.html',
-            controller: 'BookController'
+            controller: 'RegisterController'
+        })
+        .when('/:bookTitle', {
+            templateUrl: 'views/book-details.html',
+            // controller: 'BookDetailsController'
         })
         .otherwise({
             redirectTo: '/home'
         });
 
 }]);
+
+bookApp.factory('books', function ($http) {
+
+    var cachedData;
+
+    //actually is list() fn but with cached data
+    function getData(callback) {
+
+        $http({
+            method: 'GET',
+            url: '/books/',
+            cache: true
+        }).success(callback);
+    }
+
+    return {
+        list: getData,
+        find: function (title, callback) {
+            getData(function (data) {
+                var book = data.filter(function (entry) {
+                    return entry.title === title;
+                })[0];
+                callback(book);
+            });
+        }
+    };
+});
 
 bookApp.directive('randomBook', [function () {
 
@@ -54,52 +88,13 @@ bookApp.directive('randomBook', [function () {
 
 }]);
 
-bookApp.controller('BookController', ['$scope', '$http', function ($scope, $http) {
 
-    
+bookApp.filter('encodeURI', function () {
+    return window.encodeURI;
+})
 
-    $scope.removeBook = function (book) {
-        //console.log($scope);
-       $http.delete('/books/' + $scope.books[0].author);
-    };
-
-
-
-    $scope.addBook = function () {
-        $http.post('/books/add', JSON.stringify($scope.newBook));
-        //console.log('New Book ' + $scope.newBook);
-
-        $scope.newBook.isbn = '',
-            $scope.newBook.title = '',
-            $scope.newBook.author = '',
-            $scope.newBook.pages = '',
-            $scope.newBook.description = ''
-    }
-
-    $http.get('/books/add').success(function (data) {
-        $scope.books = data;
-        //console.log('Inside Book controller ' + data);
-    });
-}]);
-
-bookApp.controller('HomeController', ['$scope', '$http', function ($scope, $http) {
-    $http.get('/books/add').success(function (data) {
-        $scope.books = data;
-        //console.log('Inside Home controller ' + data);
-
-    });
-}]);
-
-bookApp.controller('ContactController', ['$scope', '$location', function ($scope, $location) {
-
-    $scope.sendMessage = function () {
-        $location.path('/contact-success');
-    };
-
-}]);
-
- //delete function
- $('.delete-book').on('click', (e) => {
+//delete function with jquery, not sure if needed ..
+$('.delete-book').on('click', (e) => {
     $target = $(e.target);
     const id = $target.attr('data-id');
     $.ajax({

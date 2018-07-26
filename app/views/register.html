@@ -1,25 +1,25 @@
 <div>
     <h1>Register</h1>
-    <form action="/users/register" method="POST">
+    <form  ng-submit="registerUser()">
         <div id="form-group">
             <label for="name">Name:</label>
-            <input type="text" name="name" class="form-control">
+            <input type="text" name="name" class="form-control" ng-model="newUser.name">
         </div>
         <div id="form-group">
-            <label for="name">Email::</label>
-            <input type="text" name="email" class="form-control">
+            <label for="name">Email:</label>
+            <input type="text" name="email" class="form-control" ng-model="newUser.email">
         </div>
         <div id="form-group">
             <label for="name">Username:</label>
-            <input type="text" name="username" class="form-control">
+            <input type="text" name="username" class="form-control" ng-model="newUser.username">
         </div>
         <div id="form-group">
             <label for="name">Password:</label>
-            <input type="password" name="password" class="form-control">
+            <input type="password" name="password" class="form-control" ng-model="newUser.password">
         </div>
         <div id="form-group">
             <label for="name">Confirm:</label>
-            <input type="password" name="password2" class="form-control">
+            <input type="password" name="password2" class="form-control" ng-model="newUser.password2">
         </div>
         <input type="submit" value="Submit" class="btn btn-primary">
     </form>
